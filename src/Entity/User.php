@@ -5,9 +5,11 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\UserRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -29,6 +31,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
         ],
     ]
 )]
+#[UniqueEntity(fields: ['email'], message: "Adresse email déjà utilisée")]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -39,6 +42,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 180, unique: true)]
     #[Groups(["user_get", "user_post"])]
+    #[Assert\Email]
     private $email;
 
     #[ORM\Column(type: 'json')]
@@ -49,14 +53,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(["user_get", "user_post"])]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255
+    )]
     private $firstName;
 
     #[ORM\Column(type: 'string', length: 255)]
     #[Groups(["user_get", "user_post"])]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 2,
+        max: 255
+    )]
     private $lastName;
 
     #[ORM\Column(type: 'string', length: 255, nullable: true)]
     #[Groups(["user_post"])]
+    #[Assert\NotBlank]
+    #[Assert\Length(
+        min: 8
+    )]
     private $plainTextPassword;
 
     public function getId(): ?int
