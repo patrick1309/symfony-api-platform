@@ -27,7 +27,7 @@ class UserListener
         ;
     }
 
-    private function hashPassword(User $user) 
+    private function hashPassword(User &$user) 
     {
         if ($user->getPlainTextPassword()) {
             $user->setPassword($this->hasher->hashPassword($user, $user->getPlainTextPassword()));
@@ -36,7 +36,7 @@ class UserListener
         return $this;
     }
     
-    private function normalizeFirstName(User $user)
+    private function normalizeFirstName(User &$user)
     {
         if ($user->getFirstName()) {
             $user->setFirstName(ucwords($user->getFirstName()));
@@ -44,7 +44,7 @@ class UserListener
         return $this;
     }
 
-    private function normalizeLastName(User $user)
+    private function normalizeLastName(User &$user)
     {
         if ($user->getLastName()) {
             $user->setLastName(mb_strtoupper($user->getLastName()));
